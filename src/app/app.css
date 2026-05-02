@@ -1,0 +1,125 @@
+/* HOST LAYOUT */
+:host {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: 50px 1fr;
+  margin: 0;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+/* HEADER */
+header{
+  color: #ffffff;
+  background-color: #073763;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  grid-column: 1 / -1;
+}
+#logo{
+  height: 50px;
+  width: 80px;
+}
+span{
+  margin-left: 20px;
+  font-size:x-large;
+}
+.div-head{
+  /* border:#000 solid 1px; */
+  width: 90px;
+  margin-left: auto;
+  margin-right: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* NAV BAR */
+aside{
+  background-color: #e69138;
+  color: #ffffff;
+  border: #073763 solid 1px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  grid-column: 1;
+  grid-row: 2;
+}
+aside div{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+aside div input{
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+aside div input::placeholder{
+  color: rgb(255, 255, 255);
+}
+.aside-link{
+  border-radius: 5px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+}
+.aside-link button{
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0);
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+.aside-link:hover{
+  background-color: rgba(255, 255, 255, 0.15);
+}
+.aside-link img{
+  max-height: 25px;
+  width: auto;
+}
+#order{
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  text-decoration: none;
+  align-self: center;
+}
+#order button{
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  border: #ffffff solid 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  gap: 8px;
+}
+#order button:hover{
+  background-color: rgba(255, 255, 255, 0.35);
+}
+aside footer{
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+  padding: 10px;
+}
+
+/* MAIN CONTENT */
+main{
+  grid-column: 2;
+  grid-row: 2;
+  padding: 20px;
+  background-color: #ffffff;
+  overflow-y: auto;
+  border: #000 solid 2px;
+}
