@@ -10,12 +10,12 @@
 <aside>
   <div>
     <input type="text" placeholder="Rechercher...">
-    <a class="aside-link" href=""><img src="/images/idashboard.png"><button>Dashboard</button></a>
-    <a class="aside-link" href=""><img src="/images/istock.png"><button>Stock</button></a>
-    <a class="aside-link" href=""><img src="/images/iventes.png"><button>Ventes</button></a>
-    <a class="aside-link" href=""><img src="/images/icommandes.png"><button>Commandes</button></a>
-    <a class="aside-link" href=""><img src="/images/ifournisseurs.png"><button>Fournisseurs</button></a>
-    <a class="aside-link" href=""><img src="/images/ia_propos.png"><button>A Propos</button></a>
+    <a class="aside-link"><img src="/images/idashboard.png"><button (click)="clic = 'dash'">Dashboard</button></a>
+    <a class="aside-link"><img src="/images/istock.png"><button (click)="clic = 'stock'">Stock</button></a>
+    <a class="aside-link"><img src="/images/iventes.png"><button (click)="clic = 'vente'">Ventes</button></a>
+    <a class="aside-link"><img src="/images/icommandes.png"><button (click)="clic = 'comm'">Commandes</button></a>
+    <a class="aside-link"><img src="/images/ifournisseurs.png"><button (click)="clic = 'fourn'">Fournisseurs</button></a>
+    <a class="aside-link"><img src="/images/ia_propos.png"><button (click)="clic = 'propos'">A Propos</button></a>
   </div>
   <a id="order">
     <button>
@@ -26,7 +26,12 @@
   <footer>©2026 My Supermarket</footer>
 </aside>
 <main>
-
+  @if(clic === 'propos'){<app-a-propos></app-a-propos>}
+  @else if (clic === 'dash') {<app-dashboard></app-dashboard>}
+  @else if (clic === 'vente') {<app-ventes></app-ventes>}
+  @else if (clic === 'comm') {<app-commandes></app-commandes>}
+  @else if (clic === 'fourn') {<app-fournisseur></app-fournisseur>}
+  @else if (clic === 'stock')  {<app-stock></app-stock>}
 </main>
 
 
