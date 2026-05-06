@@ -1,1 +1,24 @@
-<p>new-order works!</p>
+<div class="norder">
+  <section class="norder-title">
+    <h1>Commandes Fournisseur </h1>
+    <h3>Gestion des commandes du supermarché.</h3>
+    <!-- <h3>Gestion des commandes depuis le fournisseur.</h3> -->
+
+  </section>
+
+
+  <section class="norder-list d-flex flex-wrap gap-3">
+    @for (item of produits; track $index) {
+    <div class="card" style="max-width: 12rem;height: auto;">
+      <img style="border: #f1f1f1 solid 0.5px;" src="/images/poutre.jpg" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">{{item.name}}</h5>
+        <p class="card-text">{{item.description}}</p>
+        <div class="d-flex justify-content-between align-items-center">
+          <p style="color: #e69138;">{{price}} FCFA</p>
+          <a href="#" class="btn btn-primary"><img src="/images/plus.png" alt="add"></a></div>
+        </div>
+    </div>
+  }
+  </section>
+</div>

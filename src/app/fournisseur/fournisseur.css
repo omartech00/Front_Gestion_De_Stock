@@ -1,0 +1,29 @@
+:host aside-st{
+  background-color: rgba(7, 55, 99, 1);
+}
+
+
+.fournisseur-title h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.fournisseur-title h3 {
+  margin: 10px 0 0;
+  color: #404040;
+  font-weight: 400;
+}
+
+.fournisseur-list{
+  margin-top: 30px;
+}
+
+.but-four{
+  background-color: #e69138;
+  border-radius: 10px;
+  border: #000 1px solid;
+  color: #fff;
+  text-decoration: none;
+  padding: 5px 10px;
+}
+

@@ -1,0 +1,14 @@
+.norder-title h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.norder-title h3 {
+  margin: 10px 0 0;
+  color: #404040;
+  font-weight: 400;
+}
+
+.norder-list{
+  margin-top: 30px;
+}

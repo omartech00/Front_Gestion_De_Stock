@@ -1,1 +1,29 @@
-<p>fournisseur works!</p>
+<div class="fournisseur">
+  <section class="fournisseur-title">
+    <h1>Nos Fournisseurs</h1>
+    <h3>Liste des fournisseurs du supermarché</h3>
+  </section>
+
+  <section class="fournisseur-list">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Telephone</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (fournisseur of fournisseurs; track fournisseur.id) {
+          <tr>
+            <td>{{ fournisseur.name }}</td>
+            <td>{{ fournisseur.email }}</td>
+            <td>{{ fournisseur.tel }}</td>
+            <td><button class="but-four">{{ fournisseur.action }}</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>

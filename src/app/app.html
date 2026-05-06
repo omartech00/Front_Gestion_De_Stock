@@ -2,20 +2,20 @@
   <img src="/images/logo.jpg" alt="Logo" id="logo">
   <span>Gestion De Stock</span>
   <div class="div-head">
-    <img src="/images/notif.png" alt="Notifications">
-    <img src="/images/setting.png" alt="Settings">
-    <img src="/images/profil.png" alt="User">
+    <a href="#"><img src="/images/notif.png" alt="Notifications"></a>
+    <a href="#"><img src="/images/setting.png" alt="Settings"></a>
+    <a href="#"><img src="/images/profil.png" alt="User"></a>
   </div>
 </header>
 <aside>
   <div>
     <input type="text" placeholder="Rechercher...">
-    <a class="aside-link"><img src="/images/idashboard.png"><button (click)="clic = 'dash'">Dashboard</button></a>
-    <a class="aside-link"><img src="/images/istock.png"><button (click)="clic = 'stock'">Stock</button></a>
-    <a class="aside-link"><img src="/images/iventes.png"><button (click)="clic = 'vente'">Ventes</button></a>
-    <a class="aside-link"><img src="/images/icommandes.png"><button (click)="clic = 'comm'">Commandes</button></a>
-    <a class="aside-link"><img src="/images/ifournisseurs.png"><button (click)="clic = 'fourn'">Fournisseurs</button></a>
-    <a class="aside-link"><img src="/images/ia_propos.png"><button (click)="clic = 'propos'">A Propos</button></a>
+    <a id="aside-da" class="aside-link"><img src="/images/idashboard.png"><button (click)="clic = 'dash'">Dashboard</button></a>
+    <a id="aside-st" class="aside-link"><img src="/images/istock.png"><button (click)="clic = 'stock'">Stock</button></a>
+    <a id="aside-ve" class="aside-link"><img src="/images/iventes.png"><button (click)="clic = 'vente'">Ventes</button></a>
+    <a id="aside-co" class="aside-link"><img src="/images/icommandes.png"><button (click)="clic = 'comm'">Commandes</button></a>
+    <a id="aside-fo" class="aside-link"><img src="/images/ifournisseurs.png"><button (click)="clic = 'fourn'">Fournisseurs</button></a>
+    <a id="aside-pr" class="aside-link"><img src="/images/ia_propos.png"><button (click)="clic = 'propos'">A Propos</button></a>
   </div>
   <a id="order">
     <button (click)="clic = 'order'">
