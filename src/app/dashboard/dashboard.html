@@ -1,12 +1,36 @@
-<div class="title" style="border: 1px solid #000;">
-  <h1>Tableau de bord</h1>
-  <h3>Analyse structurelle et gestion des flux d'inventaire en temps réel.</h3>
-</div>
-  <div class="graph" style="border: 1px solid #25c223;">
+<div class="dashboard">
+  <section class="dashboard-header">
+    <div class="dashboard-title">
+      <h1>Tableau de bord</h1>
+      <h3>Analyse et gestion des flux d'inventaire en temps réel.</h3>
+    </div>
+    <div class="dashboard-actions">
+      <button class="period-btn active">7 JOURS</button>
+      <button class="period-btn">30 JOURS</button>
+    </div>
+  </section>
 
-</div>
-<div class="stats" style="border: 1px solid #b4a611;">
-  <div class="stat" style="border: 1px solid #683030;"></div>
-  <div class="stat" style="border: 1px solid #683030;"></div>
-  <div class="stat" style="border: 1px solid #683030;"></div>
+  <section class="dashboard-body">
+    <article class="dashboard-chart">
+      <div class="chart-card">
+        <div class="chart-title">Flux de Stock Hebdomadaire</div>
+        <div class="chart-placeholder">Graphique ici</div>
+      </div>
+    </article>
+
+    <aside class="dashboard-stats">
+      <div class="stat-card">
+        <div class="stat-label">Articles Actifs</div>
+        <div class="stat-value stat-value--primary">5400</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Bas Stock</div>
+        <div class="stat-value stat-value--warning">100</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Rupture Stock</div>
+        <div class="stat-value stat-value--danger">80</div>
+      </div>
+    </aside>
+  </section>
 </div>

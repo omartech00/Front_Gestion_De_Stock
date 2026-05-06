@@ -1,0 +1,35 @@
+/* .stock{
+  background-color: violet;
+} */
+
+.stock-title h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.stock-title h3 {
+  margin: 10px 0 0;
+  color: #404040;
+  font-weight: 400;
+}
+
+.stock-list{
+  margin-top: 30px;
+  /* background-color: beige; */
+}
+
+/*.mytable{
+  width: 100%;
+  height: auto;
+} */
+
+/* .mytable thead th{
+  font: x-large;
+  border: #000 solid 2px;
+  padding: 10px;
+}
+.mytable tbody td{
+  gap: 0;
+  border: #3a3a3a solid 1px;
+  padding: 10px;
+} */

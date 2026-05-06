@@ -1,1 +1,33 @@
-<p>ventes works!</p>
+<div class="vente">
+  <section class="vente-title">
+    <h1>Ventes</h1>
+    <h3>Historique des differentes ventes effectues</h3>
+  </section>
+
+  <section class="vente-list">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID des ventes</th>
+          <th>Date</th>
+          <th>Nombre d'articles</th>
+          <th>Facture</th>
+          <th>Vendeur</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (vente of ventes; track vente.id) {
+          <tr>
+            <td>{{ vente.id }}</td>
+            <td>{{ vente.date }}</td>
+            <td>{{ vente.nbr_article }}</td>
+            <td>{{ vente.facture }}</td>
+            <td>{{ vente.vendeur }}</td>
+            <td>{{ vente.status }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>

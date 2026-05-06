@@ -1,1 +1,29 @@
-<p>stock works!</p>
+<div class="stock">
+  <section class="stock-title">
+    <h1>Inventaire</h1>
+    <h3>Rapport de stock en temps réel.</h3>
+  </section>
+
+  <section class="stock-list">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Designation des produits</th>
+          <th>Categorie</th>
+          <th>Stock</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (produit of produits; track produit.id) {
+          <tr>
+            <td>{{ produit.name }}</td>
+            <td>{{ produit.categorie }}</td>
+            <td>{{ produit.stock }}</td>
+            <td>{{ produit.status }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>
