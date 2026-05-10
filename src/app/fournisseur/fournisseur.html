@@ -8,19 +8,17 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Nom</th>
-          <th>Email</th>
-          <th>Telephone</th>
+          <th>Societe</th>
+          <th>Contact</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        @for (fournisseur of fournisseurs; track fournisseur.id) {
+        @for (fournisseur of fournisseurs(); track fournisseur.id) {
           <tr>
-            <td>{{ fournisseur.name }}</td>
-            <td>{{ fournisseur.email }}</td>
-            <td>{{ fournisseur.tel }}</td>
-            <td><button class="but-four">{{ fournisseur.action }}</button></td>
+            <td>{{ fournisseur.societe }}</td>
+            <td>{{ fournisseur.contact }}</td>
+            <td><button class="but-four">Commander</button></td>
           </tr>
         }
       </tbody>

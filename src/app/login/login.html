@@ -1,0 +1,31 @@
+<div class="page">
+  <div class="card">
+    <div class="logo-area">
+      <div class="logo-icon">
+        <img src="/images/logo.jpg" alt="Logo" style="width:40px;height:40px;object-fit:contain;">
+      </div>
+      <p class="title">Gestion de stock</p>
+      <p class="subtitle">Connectez-vous à votre espace</p>
+    </div>
+
+    <div class="field">
+      <label>Nom d'utilisateur</label>
+      <div class="field-wrap">
+        <input [(ngModel)]="username" type="text" placeholder="ex: admin" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Mot de passe</label>
+      <div class="field-wrap">
+        <input [(ngModel)]="password" [type]="showPw ? 'text' : 'password'" placeholder="••••••••" />
+        <button class="toggle-pw" (click)="showPw = !showPw">👁</button>
+      </div>
+      <p class="error-msg" *ngIf="error">{{ error }}</p>
+    </div>
+
+    <button class="btn-login" (click)="onLogin()" [disabled]="loading">
+      {{ loading ? 'Connexion...' : 'Se connecter' }}
+    </button>
+  </div>
+</div>

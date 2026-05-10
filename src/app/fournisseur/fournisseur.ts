@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { ApiService, Fournisseur as StockItem } from '../services/api-service';
 
 @Component({
   selector: 'app-fournisseur',
@@ -6,12 +7,25 @@ import { Component } from '@angular/core';
   templateUrl: './fournisseur.html',
   styleUrl: './fournisseur.css',
 })
-export class Fournisseur {
-  fournisseurs: any[] = [
-    {nom: 'Fournisseur 1', email: 'fournisseur1@example.com', tel: '0123456789', action: 'Commander'},
-    {nom: 'Fournisseur 2', email: 'fournisseur2@example.com', tel: '0123456789', action: 'Commander'},
-    {nom: 'Fournisseur 3', email: 'fournisseur3@example.com', tel: '0123456789', action: 'Commander'},
-    {nom: 'Fournisseur 4', email: 'fournisseur4@example.com', tel: '0123456789', action: 'Commander'},
-    {nom: 'Fournisseur 5', email: 'fournisseur5@example.com', tel: '0123456789', action: 'Commander'}
-  ];
+export class Fournisseur implements OnInit {
+
+  private apiService = inject(ApiService);
+
+  fournisseurs = signal<StockItem[]>([]);
+  loading  = signal(true);
+  error    = signal('');
+
+  ngOnInit(): void {
+    this.apiService.getFournisseurs().subscribe({
+      next: (data: any) => {
+        this.fournisseurs.set(data.results ?? data);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Erreur fournisseur :', err);
+        this.error.set('Impossible de charger les fournisseurs');
+        this.loading.set(false);
+      }
+    });
+  }
 }

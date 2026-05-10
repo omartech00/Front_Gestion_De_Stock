@@ -1,39 +1,50 @@
-<header>
-  <img src="/images/logo.jpg" alt="Logo" id="logo">
-  <span>Gestion De Stock</span>
-  <div class="div-head">
-    <a href="#"><img src="/images/notif.png" alt="Notifications"></a>
-    <a href="#"><img src="/images/setting.png" alt="Settings"></a>
-    <a href="#"><img src="/images/profil.png" alt="User"></a>
-  </div>
-</header>
-<aside>
-  <div>
-    <input type="text" placeholder="Rechercher...">
-    <a id="aside-da" class="aside-link"><img src="/images/idashboard.png"><button (click)="clic = 'dash'">Dashboard</button></a>
-    <a id="aside-st" class="aside-link"><img src="/images/istock.png"><button (click)="clic = 'stock'">Stock</button></a>
-    <a id="aside-ve" class="aside-link"><img src="/images/iventes.png"><button (click)="clic = 'vente'">Ventes</button></a>
-    <a id="aside-co" class="aside-link"><img src="/images/icommandes.png"><button (click)="clic = 'comm'">Commandes</button></a>
-    <a id="aside-fo" class="aside-link"><img src="/images/ifournisseurs.png"><button (click)="clic = 'fourn'">Fournisseurs</button></a>
-    <a id="aside-pr" class="aside-link"><img src="/images/ia_propos.png"><button (click)="clic = 'propos'">A Propos</button></a>
-  </div>
-  <a id="order">
-    <button (click)="clic = 'order'">
-      <img src="/images/order.png" style="width: 40px;height: 40px;"><br>
-      <span style="font-size: large;">New Order</span>
-    </button>
-  </a>
-  <footer>©2026 My Supermarket</footer>
-</aside>
-<main>
-  @if(clic === 'propos'){<app-a-propos></app-a-propos>}
-  @else if (clic === 'dash') {<app-dashboard></app-dashboard>}
-  @else if (clic === 'vente') {<app-ventes></app-ventes>}
-  @else if (clic === 'comm') {<app-commandes></app-commandes>}
-  @else if (clic === 'fourn') {<app-fournisseur></app-fournisseur>}
-  @else if (clic === 'stock')  {<app-stock></app-stock>}
-  @else if (clic === 'order') {<app-new-order></app-new-order>}
-</main>
+@if (!authService.isLoggedIn()) {
+  <app-login />
+} @else {
+  <header>
+    <img src="/images/logo.jpg" alt="Logo" id="logo">
+    <span>Gestion De Stock</span>
+    <div class="div-head">
+      <a href="#"><img src="/images/notif.png" alt="Notifications"></a>
+      <a href="#"><img src="/images/setting.png" alt="Settings"></a>
+      <a href="#"><img src="/images/profil.png" alt="User"></a>
+      <!-- Bouton logout -->
+      <button (click)="logout()"
+        style="background-color: #e69138;
+        color: white; border: none;
+        cursor: pointer; border-radius: 5px">
+        Déconnexion
+      </button>
+    </div>
+  </header>
 
+  <aside>
+    <div>
+      <input type="text" placeholder="Rechercher...">
+      <a id="aside-da" class="aside-link"><img src="/images/idashboard.png"><button (click)="clic = 'dash'">Dashboard</button></a>
+      <a id="aside-st" class="aside-link"><img src="/images/istock.png"><button (click)="clic = 'stock'">Stock</button></a>
+      <a id="aside-ve" class="aside-link"><img src="/images/iventes.png"><button (click)="clic = 'vente'">Ventes</button></a>
+      <a id="aside-co" class="aside-link"><img src="/images/icommandes.png"><button (click)="clic = 'comm'">Commandes</button></a>
+      <a id="aside-fo" class="aside-link"><img src="/images/ifournisseurs.png"><button (click)="clic = 'fourn'">Fournisseurs</button></a>
+      <a id="aside-pr" class="aside-link"><img src="/images/ia_propos.png"><button (click)="clic = 'propos'">A Propos</button></a>
+    </div>
+    <a id="order">
+      <button (click)="clic = 'order'">
+        <img src="/images/order.png" style="width: 40px;height: 40px;"><br>
+        <span style="font-size: large;">New Order</span>
+      </button>
+    </a>
+    <footer>©2026 My Supermarket</footer>
+  </aside>
 
-<router-outlet />
+  <main>
+    @if(clic === 'propos')       { <app-a-propos></app-a-propos> }
+    @else if (clic === 'dash')   { <app-dashboard></app-dashboard> }
+    @else if (clic === 'vente')  { <app-ventes></app-ventes> }
+    @else if (clic === 'comm')   { <app-commandes></app-commandes> }
+    @else if (clic === 'fourn')  { <app-fournisseur></app-fournisseur> }
+    @else if (clic === 'stock')  { <app-stock></app-stock> }
+    @else if (clic === 'order')  { <app-new-order></app-new-order> }
+    @else                        { <app-dashboard></app-dashboard> }  <!-- défaut -->
+  </main>
+}

@@ -1,21 +1,44 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ApiService, Stock as StockItem } from '../services/api-service';
 
 @Component({
-  selector: 'app-stock',
-  imports: [],
+  selector: 'app-stock',    // ← vérifiez ce sélecteur
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './stock.html',
   styleUrl: './stock.css',
 })
-export class Stock {
-  produits: any[] = [{id: 1, name: 'Produit 1', categorie: 'Catégorie 1', stock: 100, status: 'En stock' },
-                    {id: 2, name: 'Produit 2', categorie: 'Catégorie 2', stock: 5, status: 'Stock bas' },
-                    {id: 3, name: 'Produit 3', categorie: 'Catégorie 3', stock: 0, status: 'En rupture' },
-                    {id: 4, name: 'Produit 4', categorie: 'Catégorie 4', stock: 150, status: 'En stock' },
-                    {id: 5, name: 'Produit 5', categorie: 'Catégorie 5', stock: 8, status: 'Stock bas' },
-                    {id: 6, name: 'Produit 6', categorie: 'Catégorie 6', stock: 25, status: 'En stock' },
-                    {id: 7, name: 'Produit 7', categorie: 'Catégorie 7', stock: 0, status: 'En rupture' },
-                    {id: 8, name: 'Produit 8', categorie: 'Catégorie 8', stock: 10, status: 'Stock bas' },
-                    {id: 9, name: 'Produit 9', categorie: 'Catégorie 9', stock: 50, status: 'En stock' },
-                    
-                    ];
+export class Stock implements OnInit {
+  private apiService = inject(ApiService);
+
+  produits = signal<StockItem[]>([]);
+  loading  = signal(true);
+  error    = signal('');
+
+  ngOnInit(): void {
+    this.apiService.getProduits().subscribe({
+      next: (data: any) => {
+        this.produits.set(data.results ?? data);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Erreur produits :', err);
+        this.error.set('Impossible de charger les produits');
+        this.loading.set(false);
+      }
+    });
+  }
+
+  getStatut(p: StockItem): string {
+    if (p.quantite === 0)            return 'Rupture';
+    if (p.quantite <= p.seuil_alert) return 'Stock bas';
+    return 'En stock';
+  }
+
+  getBadgeClass(p: StockItem): string {
+    if (p.quantite === 0)            return 'badge-danger';
+    if (p.quantite <= p.seuil_alert) return 'badge-warning';
+    return 'badge-success';
+  }
 }
