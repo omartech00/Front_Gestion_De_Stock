@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../log-services/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,7 @@ import { AuthService } from '../log-services/auth-service';
 })
 export class LoginComponent {
   private auth = inject(AuthService);
+  private router = inject(Router);
 
   username = '';
   password = '';
@@ -28,7 +30,7 @@ export class LoginComponent {
     this.error   = '';
 
     this.auth.login(this.username, this.password).subscribe({
-      next: () => { this.loading = false; },          // app.html bascule automatiquement
+      next: () => this.router.navigate(['/dashboard']),         // app.html bascule automatiquement
       error: () => {
         this.loading  = false;
         this.error    = 'Identifiants incorrects';
