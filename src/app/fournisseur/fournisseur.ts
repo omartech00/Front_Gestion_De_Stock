@@ -1,9 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ApiService, Fournisseur as StockItem } from '../services/api-service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-fournisseur',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './fournisseur.html',
   styleUrl: './fournisseur.css',
 })
