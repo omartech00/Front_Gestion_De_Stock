@@ -1,8 +1,9 @@
 /* HOST LAYOUT */
-html, body {
+/* html, body {
   height: 100%;
   margin: 0;
-}
+  overflow: hidden;
+} */
 
 /* Layout de base (login) — centré plein écran */
 :host {
@@ -22,6 +23,9 @@ html, body {
   grid-template-columns: 200px 1fr;
   grid-template-rows: 50px 1fr;
   background: unset;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
 }
 
 /* HEADER */
@@ -64,6 +68,9 @@ aside{
   justify-content: space-between;
   grid-column: 1;
   grid-row: 2;
+  align-self: stretch;
+  min-height: 0;
+  overflow-y:auto;
 }
 aside div{
   display: flex;
@@ -139,11 +146,9 @@ main{
   grid-row: 2;
   padding: 20px;
   background-color: #ffffff;
+  align-self: stretch;
   overflow-y: auto;
   min-height: 0;
+  overflow-y: scroll;
   border: #000 solid 2px;
-}
-
-aside{
-  min-height: 0;
 }
