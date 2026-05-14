@@ -20,7 +20,7 @@
             <td>{{ produit.libelle }}</td>
             <td>{{ produit.prix_unitaire }}</td>
             <td>{{ produit.quantite }}</td>
-            <td>{{ produit.seuil_alert }}</td>
+            <td [style.color]="getBadgeClass(produit)">{{ getStatut(produit) }}</td>
           </tr>
         }
       </tbody>

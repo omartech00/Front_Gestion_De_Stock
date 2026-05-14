@@ -5,10 +5,12 @@
     <img src="/images/logo.jpg" alt="Logo" id="logo">
     <span>Gestion De Stock</span>
     <div class="div-head">
+      <button style="background-color: #e69138; color:#ffffff; border-radius: 5px; border: none; padding: 3px; cursor: pointer;"
+      (click)="logout()">Déconnexion</button>
+
       <a href="#"><img src="/images/notif.png"></a>
       <a href="#"><img src="/images/setting.png"></a>
       <a href="#"><img src="/images/profil.png"></a>
-      <button (click)="logout()">Déconnexion</button>
     </div>
   </header>
 
@@ -28,10 +30,10 @@
         <span style="font-size:large;">New Order</span>
       </button>
     </a>
-    <footer>©2026 My Supermarket</footer>
+    <footer>©2026 Supermarket</footer>
   </aside>
 
   <main>
-    <router-outlet />   <!-- ← les composants s'affichent ici -->
+    <router-outlet />
   </main>
 }

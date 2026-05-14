@@ -8,23 +8,21 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>ID des ventes</th>
           <th>Date</th>
+          <th>Produit</th>
           <th>Nombre d'articles</th>
-          <th>Facture</th>
+          <th>Montant total</th>
           <th>Vendeur</th>
-          <th>Status</th>
         </tr>
       </thead>
       <tbody>
-        @for (vente of ventes; track vente.id) {
+        @for (vente of ventes(); track vente.id) {
           <tr>
-            <td>{{ vente.id }}</td>
-            <td>{{ vente.date }}</td>
-            <td>{{ vente.nbr_article }}</td>
-            <td>{{ vente.facture }}</td>
-            <td>{{ vente.vendeur }}</td>
-            <td>{{ vente.status }}</td>
+            <td>{{ vente.data | date:'dd/MM/yyyy à  HH:mm' }}</td>
+            <td>{{ vente.produit.libelle }}</td>
+            <td>{{ vente.quantite_vendue }}</td>
+            <td>{{ vente.montant_total }} FCFA</td>
+            <td>{{ vente.vendeur.username }}</td>
           </tr>
         }
       </tbody>
