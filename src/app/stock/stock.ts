@@ -37,8 +37,8 @@ export class Stock implements OnInit {
   }
 
   getBadgeClass(p: StockItem): string {
-    if (p.quantite === 0)            return 'badge-danger';
-    if (p.quantite <= p.seuil_alert) return 'badge-warning';
-    return 'badge-success';
+    if (p.quantite === 0)            return 'red';
+    if (p.quantite <= p.seuil_alert) return 'orange';
+    return 'green';
   }
 }
