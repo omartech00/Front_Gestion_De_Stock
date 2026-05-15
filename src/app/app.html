@@ -2,6 +2,7 @@
   <app-login />
 } @else {
   <header>
+    <button class="menu-toggle" (click)="toggleMenu()">☰</button>
     <img src="/images/logo.jpg" alt="Logo" id="logo">
     <span>Gestion De Stock</span>
     <div class="div-head">
@@ -14,7 +15,7 @@
     </div>
   </header>
 
-  <aside>
+  <aside [class.open]="menuOuvert">
     <div>
       <input type="text" placeholder="Rechercher...">
       <a routerLink="/dashboard"   routerLinkActive="active" class="aside-link"><img src="/images/idashboard.png"><button>Dashboard</button></a>
