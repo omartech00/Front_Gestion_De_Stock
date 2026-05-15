@@ -27,7 +27,6 @@ html, body {
   max-height: 100vh;
   overflow: hidden;
 }
-
 /* HEADER */
 header{
   color: #ffffff;
@@ -151,4 +150,80 @@ main{
   min-height: 0;
   overflow-y: scroll;
   border: #000 solid 2px;
+}
+
+/* Bouton hamburger — caché sur desktop */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 12px;
+  color: #fff;
+  font-size: 24px;
+}
+
+/* ─── TABLETTE (≤ 900px) ─── */
+@media (max-width: 900px) {
+  :host(.logged-in) {
+    grid-template-columns: 160px 1fr;
+  }
+
+  header span {
+    font-size: large;
+  }
+
+  .aside-link button {
+    font-size: 13px;
+    padding: 8px;
+  }
+}
+
+/* ─── MOBILE (≤ 600px) ─── */
+
+@media (max-width: 600px) {
+
+  /* Grid : aside disparaît, main prend toute la largeur */
+  :host(.logged-in) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 50px 1fr;
+  }
+
+  /* Bouton hamburger visible */
+  .menu-toggle {
+    display: block;
+  }
+
+  header span {
+    font-size: medium;
+  }
+
+  #logo {
+    width: 50px;
+  }
+
+  /* Aside en overlay glissant */
+  aside {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 240px;
+    height: calc(100vh - 50px);
+    z-index: 100;
+    transform: translateX(-100%);   /* caché par défaut */
+    box-shadow: 4px 0 16px rgba(0,0,0,0.2);
+    grid-column: unset;
+    grid-row: unset;
+  }
+
+  /* Classe ajoutée par Angular quand le menu est ouvert */
+  aside.open {
+    transform: translateX(0);
+  }
+
+  main {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 12px;
+  }
 }

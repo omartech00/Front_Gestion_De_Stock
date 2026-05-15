@@ -12,10 +12,17 @@ import { AuthService } from './log-services/auth-service';
 })
 export class App {
   authService = inject(AuthService);  // public pour le template
+  menuOuvert = false;
 
   @HostBinding('class.logged-in')
   get isLoggedIn() {
     return this.authService.isLoggedIn();  // ← appel du signal comme une fonction
+  }
+
+  toggleMenu() { this.menuOuvert = !this.menuOuvert; }
+
+  naviguer(page: string) {
+    this.menuOuvert = false;  // ← ferme le menu après clic sur mobile
   }
 
   logout() {
