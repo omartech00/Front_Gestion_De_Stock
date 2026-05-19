@@ -1,36 +1,96 @@
 <div class="dashboard">
+
   <section class="dashboard-header">
+
     <div class="dashboard-title">
       <h1>Tableau de bord</h1>
       <h3>Analyse et gestion des flux d'inventaire en temps réel.</h3>
     </div>
+
     <div class="dashboard-actions">
-      <button class="period-btn active">7 JOURS</button>
-      <button class="period-btn">30 JOURS</button>
+      <button
+        class="period-btn"
+        [class.active]="periodeDays() === 7"
+        (click)="changerPeriode(7)">
+        7 JOURS
+      </button>
+      <button
+        class="period-btn"
+        [class.active]="periodeDays() === 30"
+        (click)="changerPeriode(30)">
+        30 JOURS
+      </button>
     </div>
+
   </section>
 
   <section class="dashboard-body">
+
     <article class="dashboard-chart">
+
       <div class="chart-card">
-        <div class="chart-title">Flux de Stock Hebdomadaire</div>
-        <div class="chart-placeholder">Graphique ici</div>
+
+        <div class="chart-title">
+          Flux de Stock {{ periodeDays() === 7 ? 'Hebdomadaire' : 'sur 30 Jours' }}
+        </div>
+
+        <!-- État : chargement -->
+        @if (loading()) {
+          <div class="chart-placeholder chart-placeholder--loading">
+            <span class="loading-spinner"></span>
+            Chargement des données…
+          </div>
+        }
+
+        <!-- État : erreur -->
+        @else if (error()) {
+          <div class="chart-placeholder chart-placeholder--error">
+            ⚠️ {{ error() }}
+          </div>
+        }
+
+        <!-- État : données OK -->
+        @else {
+          <div class="chart-placeholder">
+            <apx-chart
+              [series]="chartSeries()"
+              [chart]="chartDetails"
+              [xaxis]="chartXAxis"
+              [stroke]="chartStroke"
+              [dataLabels]="chartDataLabels">
+            </apx-chart>
+          </div>
+        }
+
       </div>
+
     </article>
 
     <aside class="dashboard-stats">
+
       <div class="stat-card">
         <div class="stat-label">Articles Actifs</div>
-        <div class="stat-value stat-value--primary">5400</div>
+        <div class="stat-value stat-value--primary">
+          {{ totalArticles() }}
+        </div>
       </div>
+
       <div class="stat-card">
         <div class="stat-label">Bas Stock</div>
-        <div class="stat-value stat-value--warning">100</div>
+        <div class="stat-value stat-value--warning">
+          {{ produitsAlerte() }}
+        </div>
       </div>
+
       <div class="stat-card">
         <div class="stat-label">Rupture Stock</div>
-        <div class="stat-value stat-value--danger">80</div>
+        <div class="stat-value stat-value--danger">
+          {{ ruptureStock() }}
+        </div>
       </div>
+
     </aside>
+
   </section>
+
 </div>

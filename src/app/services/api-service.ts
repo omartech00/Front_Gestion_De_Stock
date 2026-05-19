@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -8,6 +8,8 @@ export interface Stock {
   prix_unitaire: number;
   quantite: number;
   seuil_alert: number;
+  fournisseur: Fournisseur;
+  en_alerte: boolean;
 }
 export interface Fournisseur {
   id: number;
@@ -24,12 +26,18 @@ export interface Commande {
 
 export interface Vente {
   id: number;
-  data: string;           // nom exact du champ API
+  data: string;
   montant_total: number;
-  quantite_vendue: number;
-  produit: Stock;
   vendeur: Vendeur;
+  lignes: LigneVente[];
 }
+
+export interface LigneVente {
+  id: number;
+  produit: Stock;
+  quantite: number;
+}
+
 export interface Vendeur {
   id: number;
   username: string;
@@ -47,11 +55,34 @@ export class ApiService {
   private http = inject(HttpClient);
 
   private apiUrl = "http://127.0.0.1:8000/api";
+  produits = signal<Stock[]>([]);
+  loading  = signal(false);
 
   getProduits(): Observable<Stock[]> {
     return this.http.get<Stock[]>(
       `${this.apiUrl}/produits/`
     );
+  }
+updateProduit(id: number, quantite: number): Observable<Stock> {
+  return this.http.patch<Stock>(
+    `${this.apiUrl}/produits/${id}/`, { quantite }
+  );
+}
+
+  chargerProduits() {
+    if (this.produits().length > 0) return;
+
+    this.loading.set(true);
+    this.http.get<any>(`${this.apiUrl}/produits/`).subscribe({
+      next: (data) => {
+        this.produits.set(data.results ?? data);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading.set(false);
+      }
+    });
   }
 
   getFournisseurs(): Observable<Fournisseur[]> {
@@ -69,6 +100,12 @@ export class ApiService {
   getVentes(): Observable<Vente[]> {
     return this.http.get<Vente[]>(
       `${this.apiUrl}/ventes/`
+    );
+  }
+
+  createVente(data: any): Observable<Vente> {
+    return this.http.post<Vente>(
+      `${this.apiUrl}/ventes/`, data
     );
   }
 
