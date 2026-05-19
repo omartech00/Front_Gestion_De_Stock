@@ -1,14 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ApiService, Vente as VenteItem } from '../services/api-service';
 
 @Component({
   selector: 'app-ventes',
-  imports: [DatePipe],
+  imports: [CommonModule, DatePipe],
   templateUrl: './ventes.html',
   styleUrl: './ventes.css',
 })
-export class Ventes {
+export class Ventes implements OnInit {
   private apiService = inject(ApiService);
 
   ventes = signal<VenteItem[]>([]);
@@ -29,3 +29,4 @@ export class Ventes {
     });
   }
 }
+

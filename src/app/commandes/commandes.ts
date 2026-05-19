@@ -1,61 +1,94 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ApiService, Stock as StockItem, Fournisseur } from '../services/api-service';
+
+interface ProduitCommande extends StockItem {
+  qteCommande: number;
+}
 
 @Component({
   selector: 'app-commandes',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './commandes.html',
   styleUrl: './commandes.css',
 })
-export class Commandes {
-  produits: any[] = [{fournisseur: 'fournisseur1@example.com', name: 'Poutre Acier', description: 'H-Section 400mm', price: 100, quantite: 0},
-                    {fournisseur: 'fournisseur2@example.com', name: 'Aluminium', description: 'H-Section 300mm', price: 150, quantite: 0},
-                    {fournisseur: 'fournisseur3@example.com', name: 'Poutre Fer', description: 'H-Section 500mm', price: 200, quantite: 0},
-                    {fournisseur: 'fournisseur1@example.com', name: 'Poutre PVC', description: 'H-Section 200mm', price: 50, quantite: 0},
-                    {fournisseur: 'fournisseur2@example.com', name: 'Poutre Bois', description: 'H-Section 600mm', price: 120, quantite: 0},
-                    {fournisseur: 'fournisseur3@example.com', name: 'Poutre Bois', description: 'H-Section 600mm', price: 180, quantite: 0},
-                    {fournisseur: 'fournisseur1@example.com', name: 'Poutre Bois', description: 'H-Section 600mm', price: 240, quantite: 0},
-                    {fournisseur: 'fournisseur2@example.com', name: 'Poutre Bois', description: 'H-Section 600mm', price: 300, quantite: 0},
-                    {fournisseur: 'fournisseur3@example.com', name: 'Poutre Bois', description: 'H-Section 600mm', price: 360, quantite: 0},
-                    {fournisseur: 'fournisseur1@example.com', name: 'Poutre Bois', description: 'H-Section 600mm', price: 420, quantite: 0}
-  ];
-  fournisseur: any[] = [{nom: 'Moussa', email: 'fournisseur1@example.com', telephone: '123456789'},
-                        {nom: 'Ahmed', email: 'fournisseur2@example.com', telephone: '987654321'},
-                        {nom: 'Fatou', email: 'fournisseur3@example.com', telephone: '456789123'}
-  ];
+export class Commandes implements OnInit {
+  apiService = inject(ApiService);
 
-  fourni = ""; // Contiendra l'email
-  nomFournisseurSelectionne = "";
+  panier               = signal<ProduitCommande[]>([]);
+  fournisseurSelectionne = signal<Fournisseur | null>(null);
 
-  selectionnerFournisseur(f: any) {
-    this.fourni = f.email;
-    this.nomFournisseurSelectionne = f.nom;
-    // Optionnel : réinitialiser les quantités si on change de fournisseur ?
-    // this.produits.forEach(p => p.quantite = 0);
+  // Fournisseurs uniques extraits des produits — pas de requête supplémentaire
+  fournisseurs = computed<Fournisseur[]>(() => {
+    const map = new Map<number, Fournisseur>();
+    this.apiService.produits().forEach(p => {
+      if (p.fournisseur) map.set(p.fournisseur.id, p.fournisseur);
+    });
+    return Array.from(map.values());
+  });
+
+  // Produits filtrés par fournisseur sélectionné
+  produitsFournisseur = computed<ProduitCommande[]>(() => {
+    const f = this.fournisseurSelectionne();
+    if (!f) return [];
+    return this.panier().filter(p => p.fournisseur?.id === f.id);
+  });
+
+  ngOnInit() {
+    this.apiService.chargerProduits();
+    const interval = setInterval(() => {
+      if (this.apiService.produits().length > 0) {
+        this.panier.set(
+          this.apiService.produits().map(p => ({ ...p, qteCommande: 0 }))
+        );
+        clearInterval(interval);
+      }
+    }, 100);
   }
-  calculerTotal() {
-    return this.produits.reduce((sum, item) => sum + (item.quantite * item.price), 0);
+
+  selectionnerFournisseur(f: Fournisseur) {
+    this.fournisseurSelectionne.set(f);
+    this.panier.update(items => items.map(p => ({ ...p, qteCommande: 0 })));
   }
+
+  ajouter(item: ProduitCommande) {
+    if (item.qteCommande < item.quantite) {
+      item.qteCommande++;
+      this.panier.update(p => [...p]); // force re-render
+    }
+  }
+
+  retirer(item: ProduitCommande) {
+    if (item.qteCommande > 0) {
+      item.qteCommande--;
+      this.panier.update(p => [...p]);
+    }
+  }
+
+  get total(): number {
+    return this.panier().reduce((sum, p) => sum + p.qteCommande * p.prix_unitaire, 0);
+  }
+
+  get panierNonVide(): boolean {
+    return this.panier().some(p => p.qteCommande > 0);
+  }
+
   envoyerCommande() {
-    if (!this.fourni) {
-      alert("Veuillez choisir un fournisseur !");
-      return;
-    }
+    const f = this.fournisseurSelectionne();
+    if (!f) { alert('Veuillez choisir un fournisseur !'); return; }
+    if (!this.panierNonVide) { alert('Votre panier est vide !'); return; }
 
-    // Filtrer uniquement les produits commandés pour ce fournisseur
-    const produitsCommandes = this.produits
-      .filter(p => p.quantite > 0 && p.fournisseur === this.fourni)
-      .map(p => `- ${p.quantite}x ${p.name} (${p.quantite * p.price} FCFA)`)
-      .join('%0D%0A');
+    const lignes = this.panier()
+      .filter(p => p.qteCommande > 0)
+      .map(p => `- ${p.qteCommande}x ${p.libelle} (${p.qteCommande * p.prix_unitaire} FCFA)`)
+      .join('\n');
 
-    if (!produitsCommandes) {
-      alert("Votre panier est vide !");
-      return;
-    }
-    const sujet = "Commande - Supermarché";
-    const corps = "Bonjour ${this.nomFournisseurSelectionne},%0D%0A%0D%0A" +
-                  "Voici ma commande :%0D%0A${produitsCommandes}%0D%0A%0D%0A" +
-                  "Total : ${this.calculerTotal()} FCFA.%0D%0A%0D%0AMerci !";
+    const sujet = encodeURIComponent('Commande — Supermarché');
+    const corps = encodeURIComponent(
+      `Bonjour ${f.societe},\n\nVoici ma commande :\n${lignes}\n\nTotal : ${this.total} FCFA.\n\nMerci !`
+    );
 
-    window.location.href = 'mailto:${this.fourni}?subject=${encodeURIComponent(sujet)}&body=${corps}';
+    window.location.href = `mailto:${f.contact}?subject=${sujet}&body=${corps}`;
   }
 }

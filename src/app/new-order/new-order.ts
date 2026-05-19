@@ -1,70 +1,131 @@
-import { Component } from '@angular/core';
-import { NgClass } from "@angular/common";
+import { Component, signal, inject, OnInit } from '@angular/core';
+import { CommonModule } from "@angular/common";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { ApiService, Stock as StockItem } from '../services/api-service';
+import { FormsModule } from '@angular/forms';
+
+// Produit avec quantité commandée séparée du stock réel
+interface ProduitCommande extends StockItem {
+  qteCommande: number;
+}
 
 @Component({
   selector: 'app-new-order',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './new-order.html',
   styleUrl: './new-order.css',
 })
-export class NewOrder {
-  // total: number = 0;
-  produits: any[] = [{id: 1, name: 'Poutre Acier', description: 'H-Section 400mm', price: 100, quantite: 0},
-                    {id: 2, name: 'Aluminium', description: 'H-Section 300mm', price: 150, quantite: 0},
-                    {id: 3, name: 'Poutre Fer', description: 'H-Section 500mm', price: 200, quantite: 0},
-                    {id: 4, name: 'Poutre PVC', description: 'H-Section 200mm', price: 50, quantite: 0},
-                    {id: 5, name: 'Poutre Bois', description: 'H-Section 600mm', price: 120, quantite: 0},
-                    {id: 6, name: 'Poutre Bois', description: 'H-Section 600mm', price: 180, quantite: 0},
-                    {id: 7, name: 'Poutre Bois', description: 'H-Section 600mm', price: 240, quantite: 0},
-                    {id: 8, name: 'Poutre Bois', description: 'H-Section 600mm', price: 300, quantite: 0},
-                    {id: 9, name: 'Poutre Bois', description: 'H-Section 600mm', price: 360, quantite: 0},
-                    {id: 10, name: 'Poutre Bois', description: 'H-Section 600mm', price: 420, quantite: 0}
+export class NewOrder implements OnInit {
+  apiService = inject(ApiService);
 
-                    ];
+  // Copie locale avec qteCommande = 0
+  panier = signal<ProduitCommande[]>([]);
 
+  ngOnInit() {
+    this.apiService.chargerProduits();
+
+    // Dès que les produits sont chargés, on crée le panier
+    const interval = setInterval(() => {
+      if (this.apiService.produits().length > 0) {
+        this.panier.set(
+          this.apiService.produits().map(p => ({ ...p, qteCommande: 0 }))
+        );
+        clearInterval(interval);
+      }
+    }, 100);
+  }
+
+  ajouter(item: ProduitCommande) {
+    if (item.qteCommande < item.quantite) {  // ne dépasse pas le stock
+      item.qteCommande++;
+    }
+  }
+
+  retirer(item: ProduitCommande) {
+    if (item.qteCommande > 0) item.qteCommande--;
+  }
+
+  // Getter total — utilisable dans le template via total
+  get total(): number {
+    return this.panier().reduce((sum, p) => sum + p.qteCommande * p.prix_unitaire, 0);
+  }
+
+  get panierNonVide(): boolean {
+    return this.total > 0;
+  }
 
   genererFacture() {
-    const doc = new jsPDF();
-    const date = new Date().toLocaleDateString();
+    const commandes = this.panier().filter(p => p.qteCommande > 0);
+    if (commandes.length === 0) return;
 
-    // 1. En-tête de la facture
+    const doc  = new jsPDF();
+    const date = new Date().toLocaleDateString('fr-FR');
+
     doc.setFontSize(18);
     doc.text('FACTURE SUPERMARCHÉ', 14, 20);
     doc.setFontSize(11);
-    doc.text(`Date: ${date}`, 14, 30);
-    doc.text(`Client: Client Comptant`, 14, 35);
+    doc.text(`Date : ${date}`, 14, 30);
+    doc.text(`Client : Client Comptant`, 14, 36);
 
-    // 2. Préparation des données du tableau
-    // On ne prend que les produits commandés (quantité > 0)
-    const produitsCommandes = this.produits
-      .filter(item => item.quantite > 0)
-      .map(item => [
-        item.name,
-        item.quantite,
-        `${item.price} FCFA`,
-        `${item.quantite * item.price} FCFA`
-      ]);
-
-    // 3. Génération du tableau
     autoTable(doc, {
       startY: 45,
       head: [['Produit', 'Quantité', 'Prix Unitaire', 'Total']],
-      body: produitsCommandes,
+      body: commandes.map(p => [
+        p.libelle,
+        p.qteCommande,
+        `${p.prix_unitaire} FCFA`,
+        `${p.qteCommande * p.prix_unitaire} FCFA`
+      ]),
       theme: 'grid',
-      headStyles: { fillColor: [230, 145, 56] } // La couleur orange #e69138
+      headStyles: { fillColor: [230, 145, 56] }
     });
 
-    // 4. Ajout du Total final
     const finalY = (doc as any).lastAutoTable.finalY + 10;
-    const totalGlobal = this.produits.reduce((sum, item) => sum + (item.quantite * item.price), 0);
-
     doc.setFontSize(14);
-    doc.text(`TOTAL À PAYER : ${totalGlobal} FCFA`, 14, finalY);
-
-    // 5. Téléchargement du fichier
+    doc.text(`TOTAL À PAYER : ${this.total} FCFA`, 14, finalY);
     doc.save(`Facture_${date}.pdf`);
-  }
 
+    // ✅ 2. CRÉER LA VENTE
+    const lignes = commandes.map(p => ({
+      produit_id: p.id,
+      quantite: p.qteCommande,
+      prix: p.prix_unitaire
+    }));
+
+    const montantTotal = this.total;
+
+    this.apiService.createVente({
+      vendeur_id: null,
+      montant_total: montantTotal,
+      lignes_write: lignes
+    }).subscribe({
+      next: (vente) => {
+        console.log('✅ Vente créée:', vente);
+
+        // 3. Mettre à jour le stock pour chaque produit commandé
+        commandes.forEach(p => {
+          const nouvelleQuantite = p.quantite - p.qteCommande;
+
+          this.apiService.updateProduit(p.id, nouvelleQuantite).subscribe({
+            next: (produitMisAJour) => {
+              // Met à jour le signal local aussi
+              this.apiService.produits.update(liste =>
+                liste.map(item =>
+                  item.id === produitMisAJour.id ? produitMisAJour : item
+                )
+              );
+              console.log(`✅ Stock mis à jour : ${p.libelle} → ${nouvelleQuantite}`);
+            },
+            error: (err) => console.error(`❌ Erreur mise à jour ${p.libelle}:`, err)
+          });
+        });
+
+        // 4. Réinitialiser le panier
+        this.panier.update(items => items.map(p => ({ ...p, qteCommande: 0 })));
+      },
+      error: (err) => console.error('❌ Erreur création vente:', err)
+    });
+  }
 }

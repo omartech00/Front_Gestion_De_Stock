@@ -17,15 +17,18 @@
       </thead>
       <tbody>
         @for (vente of ventes(); track vente.id) {
-          <tr>
-            <td>{{ vente.data | date:'dd/MM/yyyy à  HH:mm' }}</td>
-            <td>{{ vente.produit.libelle }}</td>
-            <td>{{ vente.quantite_vendue }}</td>
-            <td>{{ vente.montant_total }} FCFA</td>
-            <td>{{ vente.vendeur.username }}</td>
-          </tr>
+          @for (ligne of vente.lignes; track ligne.id) {
+            <tr>
+              <td>{{ vente.data | date:'dd/MM/yyyy à HH:mm' }}</td>
+              <td>{{ ligne.produit.libelle }}</td>
+              <td>{{ ligne.quantite }}</td>
+              <td>{{ vente.montant_total }} FCFA</td>
+              <td>{{ vente.vendeur.username }}</td>
+            </tr>
+          }
         }
       </tbody>
     </table>
   </section>
 </div>
+

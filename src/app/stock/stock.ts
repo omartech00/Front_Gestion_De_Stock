@@ -10,24 +10,10 @@ import { ApiService, Stock as StockItem } from '../services/api-service';
   styleUrl: './stock.css',
 })
 export class Stock implements OnInit {
-  private apiService = inject(ApiService);
+  apiService = inject(ApiService);
 
-  produits = signal<StockItem[]>([]);
-  loading  = signal(true);
-  error    = signal('');
-
-  ngOnInit(): void {
-    this.apiService.getProduits().subscribe({
-      next: (data: any) => {
-        this.produits.set(data.results ?? data);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error('Erreur produits :', err);
-        this.error.set('Impossible de charger les produits');
-        this.loading.set(false);
-      }
-    });
+  ngOnInit() {
+    this.apiService.chargerProduits();
   }
 
   getStatut(p: StockItem): string {

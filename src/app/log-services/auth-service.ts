@@ -36,6 +36,9 @@ export class AuthService {
     this.isLoggedIn.set(false);      // ← déclenche le re-render
     this.router.navigate(['/login']);
   }
+  saveToken(token: string): void {
+    localStorage.setItem('access_token', token);
+  }
 
   getToken() { return localStorage.getItem('access_token'); }
 

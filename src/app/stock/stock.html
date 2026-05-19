@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        @for (produit of produits(); track produit.id) {
+        @for (produit of apiService.produits(); track produit.id) {
           <tr>
             <td>{{ produit.libelle }}</td>
             <td>{{ produit.prix_unitaire }}</td>
